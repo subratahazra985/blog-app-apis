@@ -22,6 +22,19 @@ public class SecurityConfig{
     @Autowired
     private CustomUserDetailsService customUserDetailsService;
 
+    /**
+     * Builds a {@link SecurityFilterChain} that
+     * <ol>
+     *     <li>Disables CSRF protection</li>
+     *     <li>Requires all requests to be authenticated</li>
+     *     <li>Uses the {@link #authenticationProvider()} as the authentication provider</li>
+     *     <li>Disables the form-based login</li>
+     *     <li>Uses the default HTTP Basic configuration</li>
+     * </ol>
+     * @param http the {@link HttpSecurity} to configure
+     * @return the built {@link SecurityFilterChain}
+     * @throws Exception if the configuration fails
+     */
 @Bean
 public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     http.csrf(csrf->csrf.disable())
@@ -33,6 +46,11 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Excepti
     return http.build();
 }
 
+    /**
+     * Returns an {@link AuthenticationProvider} that uses the {@link CustomUserDetailsService}
+     * to retrieve the user and the {@link #passwordEncoder()} to encode the password.
+     * @return the built {@link AuthenticationProvider}
+     */
     @Bean
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
@@ -41,6 +59,14 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Excepti
         return authProvider;
     }
 
+    /**
+     * Provides a {@link PasswordEncoder} bean that uses BCrypt hashing algorithm for encoding passwords.
+     * <p>
+     * This bean is used to encode passwords securely using the BCrypt hashing algorithm.
+     * The BCrypt algorithm is widely used for its resistance to brute-force attacks.
+     *
+     * @return a {@link PasswordEncoder} instance configured to use BCrypt
+     */
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();

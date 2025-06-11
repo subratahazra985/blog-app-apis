@@ -11,6 +11,14 @@ import java.util.UUID;
 
 @Service
 public class FileServiceImpl implements FileService {
+    /**
+     * Uploads a file to the specified path and returns the name of the file which can be used to retrieve the file.
+     *
+     * @param path the path where the file is to be uploaded
+     * @param multipartFile the file which is to be uploaded
+     * @return the name of the uploaded file
+     * @throws IOException
+     */
     @Override
     public String uploadImage(String path, MultipartFile multipartFile) throws IOException {
         String name=multipartFile.getOriginalFilename();
@@ -25,6 +33,14 @@ public class FileServiceImpl implements FileService {
         return fileName;
     }
 
+    /**
+     * Returns an InputStream of a file from the specified path.
+     *
+     * @param path the path where the file is located
+     * @param fileName the name of the file which is to be retrieved
+     * @return an InputStream of the file
+     * @throws FileNotFoundException if the file is not found
+     */
     @Override
     public InputStream getResource(String path, String fileName) throws FileNotFoundException {
         String fullPath=path+File.separator+fileName;

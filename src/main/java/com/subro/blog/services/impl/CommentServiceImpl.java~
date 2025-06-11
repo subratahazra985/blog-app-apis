@@ -24,15 +24,6 @@ public class CommentServiceImpl implements CommentService {
     private UserRepository userRepository;
     @Autowired
     private ModelMapper modelMapper;
-    /**
-     * Creates a new comment for a given post by a given user.
-     *
-     * @param commentDto the comment data transfer object
-     * @param postId the ID of the post to which the comment is being added
-     * @param userId the ID of the user writing the comment
-     * @return a ResponseEntity containing the saved CommentDto and an HTTP status of CREATED
-     * @throws ResourceNotFoundException if the post or user does not exist
-     */
     @Override
     public CommentDto createComment(CommentDto commentDto, Integer postId, Integer userId) {
         Post post=this.postRepository.findByPostIdAndUserId(postId, userId).orElseThrow(()->new ResourceNotFoundException("Post", "Post Id", postId));
@@ -45,12 +36,6 @@ public class CommentServiceImpl implements CommentService {
         return this.modelMapper.map(savedComment, CommentDto.class);
     }
 
-    /**
-     * Deletes a comment identified by its ID.
-     *
-     * @param commentId the ID of the comment to be deleted
-     * @throws ResourceNotFoundException if the comment does not exist
-     */
     @Override
     public void deleteComment(Integer commentId) {
         Comment comment = this.commentRepository.findById(commentId).orElseThrow(() -> new ResourceNotFoundException("Comment", "Comment Id", commentId));

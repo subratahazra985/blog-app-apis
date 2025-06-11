@@ -134,12 +134,6 @@ public class PostController {
         return new ResponseEntity<>(new ApiResponse("Post is delete successfully!!", true), HttpStatus.OK);
     }
 
-    /**
-     * Retrieves all posts with titles containing the given search keywords.
-     *
-     * @param keywords the search keywords
-     * @return a ResponseEntity containing the list of PostDto objects and an HTTP status of OK
-     */
     @GetMapping("/posts/search/{keywords}")
     public ResponseEntity<List<PostDto>> searchPostsByTitle(
             @PathVariable("keywords")String keywords
@@ -148,14 +142,6 @@ public class PostController {
         return new ResponseEntity<>(postDtos, HttpStatus.OK);
     }
 
-    /**
-     * Uploads an image to the server and assigns it to a post identified by its ID.
-     *
-     * @param image the image to be uploaded
-     * @param postId the ID of the post to which the image is to be assigned
-     * @return a ResponseEntity containing the updated PostDto and an HTTP status of OK
-     * @throws IOException
-     */
     @PostMapping("/post/image/upload/{postId}")
     public ResponseEntity<PostDto> uploadPostImage(
             @RequestParam("image") MultipartFile image,
@@ -168,13 +154,6 @@ public class PostController {
         return new ResponseEntity<>(updatedPost, HttpStatus.OK);
     }
 
-    /**
-     * Downloads an image associated with a post identified by its image name.
-     *
-     * @param imageName the name of the image to be downloaded
-     * @param response the HttpServletResponse to write the image to
-     * @throws IOException if an error occurs while reading the image from the file system
-     */
     @GetMapping(value = "post/image/{imageName}", produces = MediaType.IMAGE_JPEG_VALUE)
     public void downloadImage(
             @PathVariable("imageName") String imageName,

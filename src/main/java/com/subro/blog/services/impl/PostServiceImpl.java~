@@ -37,15 +37,6 @@ public class PostServiceImpl implements PostService {
     private PostResponse postResponse;
 
 
-    /**
-     * Creates a new post with the provided details under the specified user and category.
-     *
-     * @param postDto the data transfer object containing the details of the post to be created
-     * @param userId the ID of the user who is creating the post
-     * @param categoryId the ID of the category under which the post is to be categorized
-     * @return a PostDto containing the saved post details
-     * @throws ResourceNotFoundException if the user or category specified by their ID does not exist
-     */
     @Override
     public PostDto createPost(PostDto postDto, Integer userId, Integer categoryId) {
         User user = this.userRepository.findById(userId)
@@ -61,14 +52,6 @@ public class PostServiceImpl implements PostService {
         return this.modelMapper.map(savedPost, PostDto.class);
     }
 
-    /**
-     * Updates an existing post with the provided details.
-     *
-     * @param postDto the data transfer object containing the updated post details
-     * @param postId the ID of the post to be updated
-     * @return a PostDto containing the updated post details
-     * @throws ResourceNotFoundException if the post with the specified ID does not exist
-     */
     @Override
     public PostDto updatePost(PostDto postDto, Integer postId) {
         Post post = this.postRepository.findById(postId)
@@ -80,12 +63,6 @@ public class PostServiceImpl implements PostService {
         return this.modelMapper.map(post, PostDto.class);
     }
 
-    /**
-     * Deletes a post identified by its ID.
-     *
-     * @param postId the ID of the post to be deleted
-     * @throws ResourceNotFoundException if the post with the specified ID does not exist
-     */
     @Override
     public void deletePost(Integer postId) {
         Post post = this.postRepository.findById(postId)
@@ -93,17 +70,6 @@ public class PostServiceImpl implements PostService {
         this.postRepository.delete(post);
     }
 
-    /**
-     * Retrieves all posts in the system. The posts can be sorted on the basis of post title or post creation date.
-     * The posts can be retrieved in a paginated manner by specifying the page number and page size.
-     * The default page number is 0 and the default page size is 10.
-     *
-     * @param pageNumber the page number of the posts to be retrieved, default is 0
-     * @param pageSize the page size of the posts to be retrieved, default is 10
-     * @param sortBy the field to sort the posts on, default is post title
-     * @param sortDirection the direction of sorting, default is ascending
-     * @return a PostResponse containing the posts and an HTTP status of OK
-     */
     @Override
     public PostResponse getAllPosts(Integer pageNumber, Integer pageSize, String sortBy, String sortDirection) {
         Sort sort = (sortDirection.equalsIgnoreCase("asc")) ? Sort.by(sortBy).ascending()
@@ -123,13 +89,6 @@ public class PostServiceImpl implements PostService {
         return postResponse;
     }
 
-    /**
-     * Retrieves a post by its ID.
-     *
-     * @param postId the ID of the post to be retrieved
-     * @return a PostDto containing the retrieved post details
-     * @throws ResourceNotFoundException if the post with the specified ID does not exist
-     */
     @Override
     public PostDto getPostById(Integer postId) {
         Post post = this.postRepository.findById(postId)
@@ -137,13 +96,6 @@ public class PostServiceImpl implements PostService {
         return this.modelMapper.map(post, PostDto.class);
     }
 
-    /**
-     * Retrieves all posts categorized under the specified category ID.
-     *
-     * @param categoryId the ID of the category whose posts are to be retrieved
-     * @return a list of PostDto objects containing the retrieved post details
-     * @throws ResourceNotFoundException if the category with the specified ID does not exist
-     */
     @Override
     public List<PostDto> getPostsByCategory(Integer categoryId) {
         Category category = this.categoryRepository.findById(categoryId)
@@ -154,13 +106,6 @@ public class PostServiceImpl implements PostService {
         return postDtoList;
     }
 
-    /**
-     * Retrieves all posts written by the given user.
-     *
-     * @param userId the ID of the user whose posts are to be retrieved
-     * @return a list of PostDto objects containing the retrieved post details
-     * @throws ResourceNotFoundException if the user with the specified ID does not exist
-     */
     @Override
     public List<PostDto> getPostsByUser(Integer userId) {
         User user = this.userRepository.findById(userId)
@@ -171,12 +116,6 @@ public class PostServiceImpl implements PostService {
         return postDtoList;
     }
 
-    /**
-     * Retrieves all posts with titles containing the given search keywords.
-     *
-     * @param keywords the search keywords
-     * @return a list of PostDto objects containing the retrieved post details
-     */
     public List<PostDto> searchPostByTitle(String keywords) {
         List<Post> posts = this.postRepository.findByPostTitleContaining(keywords);
         List<PostDto> postDtoList = posts.stream()

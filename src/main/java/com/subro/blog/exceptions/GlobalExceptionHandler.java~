@@ -12,12 +12,6 @@ import java.util.Map;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
-    /**
-     * Handles ResourceNotFoundException and returns a response entity with an error message.
-     *
-     * @param ex the ResourceNotFoundException thrown when a requested resource is not found
-     * @return a ResponseEntity containing an ApiResponse with the error message and an HTTP status of NOT_FOUND
-     */
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ApiResponse> resourceNotFoundExceptionHandler(ResourceNotFoundException ex){
         String message = ex.getMessage();
@@ -25,13 +19,6 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<ApiResponse>(apiResponse, HttpStatus.NOT_FOUND);
     }
 
-    /**
-     * Handles MethodArgumentNotValidException and returns a response entity containing a map of errors.
-     * The keys of the map are the field names and the values are the corresponding error messages.
-     *
-     * @param ex the MethodArgumentNotValidException thrown when the request body is invalid
-     * @return a ResponseEntity containing a map of errors and an HTTP status of BAD_REQUEST
-     */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, String>> methodArgumentNotValidExceptionHandler(MethodArgumentNotValidException ex){
         Map<String, String> errors=new HashMap<>();
