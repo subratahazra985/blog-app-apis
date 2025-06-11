@@ -1,8 +1,12 @@
 package com.subro.blog.exceptions;
 
 import com.subro.blog.payloads.ApiResponse;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.MalformedJwtException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -39,5 +43,45 @@ public class GlobalExceptionHandler {
                 errors.put(error.getField(), error.getDefaultMessage())
         );
         return ResponseEntity.badRequest().body(errors);
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<?> handleBadCredentials(BadCredentialsException ex) {
+        return new ResponseEntity<>(Map.of(
+                "error", "Invalid username or password",
+                "status", HttpStatus.UNAUTHORIZED.value()
+        ), HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(UsernameNotFoundException.class)
+    public ResponseEntity<?> handleUserNotFound(UsernameNotFoundException ex) {
+        return new ResponseEntity<>(Map.of(
+                "error", ex.getMessage(),
+                "status", HttpStatus.NOT_FOUND.value()
+        ), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(ExpiredJwtException.class)
+    public ResponseEntity<?> handleExpiredJwt(ExpiredJwtException ex) {
+        return new ResponseEntity<>(Map.of(
+                "error", "JWT token expired",
+                "status", HttpStatus.UNAUTHORIZED.value()
+        ), HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(MalformedJwtException.class)
+    public ResponseEntity<?> handleMalformedJwt(MalformedJwtException ex) {
+        return new ResponseEntity<>(Map.of(
+                "error", "Invalid JWT token",
+                "status", HttpStatus.BAD_REQUEST.value()
+        ), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<?> handleGeneralException(Exception ex) {
+        return new ResponseEntity<>(Map.of(
+                "error", ex.getMessage(),
+                "status", HttpStatus.INTERNAL_SERVER_ERROR.value()
+        ), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
