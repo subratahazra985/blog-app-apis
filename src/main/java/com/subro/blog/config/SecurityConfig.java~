@@ -1,7 +1,6 @@
 package com.subro.blog.config;
 
 import com.subro.blog.security.CustomUserDetailsService;
-import com.subro.blog.security.JwtAuthenticationEntryPoint;
 import com.subro.blog.security.JwtAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -28,8 +27,6 @@ public class SecurityConfig{
     private JwtAuthenticationFilter jwtAuthenticationFilter;
     @Autowired
     private CustomUserDetailsService customUserDetailsService;
-    @Autowired
-    private JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 
     /**
      * Builds a {@link SecurityFilterChain} that
@@ -52,7 +49,7 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Excepti
             .authenticationProvider(authenticationProvider())
             .sessionManagement(session->session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
-    http.exceptionHandling(ex->ex.authenticationEntryPoint(jwtAuthenticationEntryPoint));
+    http.exceptionHandling(ex->ex.authenticationEntryPoint(new JwtAuthenticationEntryPoint()));
 //            http.formLogin(flc->flc.disable());
 //            http.httpBasic(withDefaults());
 
